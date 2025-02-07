@@ -1,0 +1,79 @@
+//plotter of gcd
+#include<stdio.h>
+#include<stdlib.h>
+
+int consec(int m, int n) {
+    int count = 0;
+    int min = m < n ? m : n;
+    while (1) {
+        count++;
+        if (m % min == 0) {
+            count++;
+            if (n % min == 0) {
+                return count;
+            }
+        }
+        min--;
+    } 
+}
+
+int modified(int m, int n) {
+    int count = 1;
+    while (m != n) {
+        (m > n) ? (m = m - n) : (n = n - m);
+        count++;
+    }
+    return count;
+}
+
+void analysis(int choice) 
+{
+    int m, n, i, count, maxcount, mincount;
+    FILE *fp1, *fp2;
+
+    for (i = 10; i < 100; i += 10)
+     {
+        maxcount = 0;
+        mincount = 10000;
+        for (m = 2; m <= i; m++) 
+        {
+            for (n = 2; n <= i; n++)
+             {
+                count = 0;
+                if (choice == 1)
+                 {
+                    count = consec(m, n);
+                } else
+                {
+                    count = modified(m, n);
+                }
+
+                if (count > maxcount) 
+                    maxcount = count;
+                if (count < mincount)
+                    mincount = count;
+            }
+        }
+        if (choice == 1) 
+        {
+            fp2 = fopen("c_b.txt", "a");
+            fp1 = fopen("c_w.txt", "a");
+        } else 
+        {
+            fp2 = fopen("m_b.txt", "a");
+            fp1 = fopen("m_w.txt", "a");
+        }
+        fprintf(fp2, "%d %d\n", i, mincount);
+        fclose(fp2);
+        fprintf(fp1, "%d %d\n", i, maxcount); 
+        fclose(fp1); 
+    }
+}
+
+int main() {
+  
+    analysis(1); // Consecutive Integer method
+    analysis(2); // Modified Euclid's method
+    printf("Text files have been generated.\n");
+    return 0;
+}
